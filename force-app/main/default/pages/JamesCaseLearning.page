@@ -1,0 +1,116 @@
+<!--
+  @description       : 
+  @author            : jamesperram@gmail.com
+  @group             : 
+  @last modified on  : 11-19-2024
+  @last modified by  : jamesperram@gmail.com
+-->
+<apex:page standardController="Case" extensions="CaseController" showHeader="false" sidebar="false">
+    <style>
+        body {
+            background: linear-gradient(to bottom, #87CEEB, #ffffff);
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+        .header {
+            background-color: #87CEEB;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            padding: 30px;
+            max-width: 800px;
+        }
+        .form-section {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            font-weight: bold;
+            color: #333;
+        }
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #87CEEB;
+            border-radius: 5px;
+        }
+        .buttons {
+            text-align: right;
+        }
+        .btn {
+            background-color: #87CEEB;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-left: 10px;
+        }
+        .btn:hover {
+            background-color: #66B2FF;
+        }
+        .contact-info {
+            background-color: #F0F8FF;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 20px;
+            border: 1px solid #87CEEB;
+        }
+        .contact-info h3 {
+            color: #87CEEB;
+            margin-top: 0;
+        }
+    </style>
+
+    <div class="header">Case Management</div>
+    <div class="container">
+        <apex:form>
+            <div class="form-section">
+                <label class="form-label" for="subject">Subject</label>
+                <apex:inputText id="subject" value="{!Case.Subject}" styleClass="form-input"/>
+            </div>
+            <div class="form-section">
+                <label class="form-label" for="description">Description</label>
+                <apex:inputTextarea id="description" value="{!Case.Description}" styleClass="form-input"/>
+            </div>
+            <div class="form-section">
+                <label class="form-label" for="priority">Priority</label>
+                <apex:inputField value="{!Case.Priority}" styleClass="form-input"/>
+            </div>
+            <div class="form-section">
+                <label class="form-label" for="status">Status</label>
+                <apex:inputField value="{!Case.Status}" styleClass="form-input"/>
+            </div>
+            <div class="form-section">
+                <label class="form-label" for="contact">Contact</label>
+                <apex:inputField value="{!Case.ContactId}" styleClass="form-input" required="true"/>
+            </div>
+
+            <apex:actionRegion>
+                <apex:outputPanel id="contactInfoPanel" styleClass="contact-info">
+                    <apex:outputText rendered="{!selectedContact != null}">
+                        <h3>Contact Information</h3>
+                        <p><strong>Name:</strong> {!selectedContact.Name}</p>
+                        <p><strong>Email:</strong> {!selectedContact.Email}</p>
+                        <p><strong>Phone:</strong> {!selectedContact.Phone}</p>
+                        <p><strong>Open Cases:</strong> {!openCases}</p>
+                    </apex:outputText>
+                </apex:outputPanel>
+            </apex:actionRegion>
+
+            <div class="buttons">
+                <apex:commandButton value="Submit" action="{!save}" styleClass="btn"/>
+                <apex:commandButton value="Reset" action="{!reset}" styleClass="btn"/>
+            </div>
+        </apex:form>
+    </div>
+</apex:page>
