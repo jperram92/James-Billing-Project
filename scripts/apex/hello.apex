@@ -1,10 +1,50 @@
-// Use .apex files to store anonymous Apex.
-// You can execute anonymous Apex in VS Code by selecting the
-//     apex text and running the command:
-//     SFDX: Execute Anonymous Apex with Currently Selected Text
-// You can also execute the entire file by running the command:
-//     SFDX: Execute Anonymous Apex with Editor Contents
+/**
+ * @description       : 
+ * @author            : jamesperram@gmail.com
+ * @group             : 
+ * @last modified on  : 11-20-2024
+ * @last modified by  : jamesperram@gmail.com
+**/
+/*
+//Understanding logical operations
+Boolean a = true;
+Boolean b = false;
 
-string tempvar = 'Enter_your_name_here';
-System.debug('Hello World!');
-System.debug('My name is ' + tempvar);
+//Two logical Operations
+// && AND operator
+// || OR operator
+
+system.debug('A: ' + a); //true
+system.debug('B: ' + b); //false
+
+//Logical AND Operations
+//All conditions must be true
+system.debug('Logical AND: ' + (a && b)); //false
+
+//Logical OR Operations
+//One condition must be true
+system.debug('Logical OR' + (a || b)); //true
+
+/*
+system.debug(a && b);
+
+&& is the logical AND operator.
+It returns true only if both a and b are true.
+If any one of them is false, the result is false.
+So, when system.debug(a && b); outputs false, it means either a or b (or both) is false.
+system.debug(a || b);
+
+|| is the logical OR operator.
+It returns true if at least one of a or b is true.
+So, when system.debug(a || b); outputs true, it means either a, b, or both are true.
+Summary:
+AND (&&): All conditions must be true for the result to be true.
+OR (||): At least one condition must be true for the result to be true.
+*/
+
+//Loops
+for(Integer  i = 0; i <=10; i++) {
+    System.debug('Multiple Numbers coming up: '+ i);
+}
+system.debug('After for loop finishes');
+
