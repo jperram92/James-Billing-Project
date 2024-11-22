@@ -1,0 +1,31 @@
+<!--
+  @description       : 
+  @author            : jamesperram@gmail.com
+  @group             : 
+  @last modified on  : 11-22-2024
+  @last modified by  : jamesperram@gmail.com
+-->
+<template>
+    <lightning-card title="Upload File with Document Type">
+        <div class="slds-m-around_medium">
+            <lightning-combobox
+                name="documentType"
+                label="Select Document Type"
+                placeholder="Choose Document Type"
+                options={documentTypeOptions}
+                value={selectedDocumentType}
+                onchange={handleDocumentTypeChange}>
+            </lightning-combobox>
+
+            <lightning-input type="file" label="Upload File" onchange={handleFileChange}></lightning-input>
+
+            <lightning-button
+                label="Upload File"
+                onclick={handleUpload}
+                class="slds-m-top_medium"
+                variant="brand"
+                disabled={isUploadDisabled}>
+            </lightning-button>
+        </div>
+    </lightning-card>
+</template>
