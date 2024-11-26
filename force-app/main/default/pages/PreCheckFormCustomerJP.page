@@ -1,0 +1,203 @@
+<!--
+  @description       : 
+  @author            : jamesperram@gmail.com
+  @group             : 
+  @last modified on  : 11-26-2024
+  @last modified by  : jamesperram@gmail.com
+-->
+<apex:page standardController="JPB_Pre_Check_Form__c" extensions="PreCheckFormController" showHeader="true" sidebar="false">
+    <style>
+        /* Global Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .page-container {
+            margin: 20px auto;
+            max-width: 800px;
+            background: #F4F4F9;
+            border: 1px solid #DADADA;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background-color: #6A0DAD;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .custom-pageblock {
+            padding: 20px;
+        }
+
+        .custom-pageblock .apex-pageBlockSection {
+            margin-bottom: 20px;
+            background: #FFFFFF;
+            border: 1px solid #E5E5E5;
+            border-radius: 5px;
+            padding: 15px;
+        }
+
+        .signature-section {
+            padding: 20px;
+            background: #EFEFFE;
+            border-top: 2px solid #6A0DAD;
+        }
+
+        .signature-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #6A0DAD;
+        }
+
+        .signature-pad {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .signature-canvas {
+            border: 1px dashed #6A0DAD;
+            width: 100%;
+            max-width: 500px;
+            height: 200px;
+            background: #FFF;
+            border-radius: 5px;
+        }
+
+        .signature-actions {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .signature-actions button {
+            padding: 10px 15px;
+            background-color: #6A0DAD;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .signature-actions button:hover {
+            background-color: #5C0AA8;
+        }
+    </style>
+
+    <apex:form id="signatureForm">
+        <div class="page-container">
+            <!-- Header Section -->
+            <div class="header">Pre-Check Form</div>
+            
+            <!-- Print Button -->
+            <div style="text-align: right; padding: 10px;">
+                <button class="print-button" type="button" onclick="window.print()">Print or Save as PDF</button>
+            </div>
+
+            <!-- Main Content Section -->
+            <div class="custom-pageblock">
+                <apex:pageBlock title="Pre-Check Form Details">
+                    <apex:pageBlockSection title="Basic Information" columns="2">
+                        <apex:outputField value="{!JPB_Pre_Check_Form__c.Name}" label="Pre-Check Name" />
+                        <apex:outputField value="{!JPB_Pre_Check_Form__c.JBP_CRN__c}" label="CRN" />
+                        <apex:outputField value="{!JPB_Pre_Check_Form__c.JPB_Date_of_Birth__c}" label="Date of Birth" />
+                        <apex:outputField value="{!JPB_Pre_Check_Form__c.JBP_Email__c}" label="Email" />
+                        <apex:outputField value="{!JPB_Pre_Check_Form__c.JBP_Phone__c}" label="Phone" />
+                        <apex:outputField value="{!JPB_Pre_Check_Form__c.JBP_Customer_Address__c}" label="Customer Address" />
+                    </apex:pageBlockSection>
+
+                    <apex:pageBlockSection title="Case and Contact Information" columns="2">
+                        <apex:outputField value="{!JPB_Pre_Check_Form__c.Case__c}" label="Case" />
+                        <apex:outputField value="{!JPB_Pre_Check_Form__c.Contact__c}" label="Contact" />
+                        <apex:outputField value="{!JPB_Pre_Check_Form__c.OwnerId}" label="Owner" />
+                        <apex:outputField value="{!JPB_Pre_Check_Form__c.LastModifiedById}" label="Last Modified By" />
+                    </apex:pageBlockSection>
+
+                    <apex:pageBlockSection title="Product and Pricing" columns="2">
+                        <apex:outputField value="{!JPB_Pre_Check_Form__c.Price_Book__c}" label="Price Book" />
+                        <apex:outputField value="{!JPB_Pre_Check_Form__c.Product__c}" label="Product" />
+                        <apex:outputField value="{!JPB_Pre_Check_Form__c.JBP_Charge_Units__c}" label="Charge Units" />
+                        <apex:outputField value="{!JPB_Pre_Check_Form__c.JBP_Rate_to_charge__c}" label="Rate to Charge" />
+                    </apex:pageBlockSection>
+
+                    <apex:pageBlockSection title="Additional Details" columns="2">
+                        <apex:outputField value="{!JPB_Pre_Check_Form__c.JPB_Preferred_Start_Date__c}" label="Preferred Start Date" />
+                        <apex:outputField value="{!JPB_Pre_Check_Form__c.PricebookEntry_ID__c}" label="PricebookEntry ID" />
+                        <apex:outputField value="{!JPB_Pre_Check_Form__c.JBP_Services_Interested__c}" label="Services Interested" />
+                        <apex:outputField value="{!JPB_Pre_Check_Form__c.JBP_Status__c}" label="Status" />
+                    </apex:pageBlockSection>
+                </apex:pageBlock>
+            </div>
+
+            <!-- Signature Section -->
+            <div class="signature-section">
+                <h3 class="signature-title">Customer E-Signature</h3>
+                <div class="signature-pad">
+                    <canvas id="signatureCanvas" class="signature-canvas"></canvas>
+                    <div class="signature-actions">
+                        <button type="button" onclick="clearSignature()">Clear</button>
+                        <button type="button" onclick="saveSignature()">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hidden Input to Store Signature Data -->
+        <apex:inputHidden value="{!signatureData}" id="signatureData" />
+
+        <!-- Save Button to Submit Signature -->
+        <apex:commandButton value="Submit Form" action="{!save}" id="submitForm" style="display:none;" />
+    </apex:form>
+
+    <script>
+        const canvas = document.getElementById('signatureCanvas');
+        const ctx = canvas.getContext('2d');
+        let isDrawing = false;
+
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+
+        function startDrawing(e) {
+            isDrawing = true;
+            ctx.beginPath();
+            ctx.moveTo(e.offsetX, e.offsetY);
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            ctx.lineTo(e.offsetX, e.offsetY);
+            ctx.strokeStyle = '#6A0DAD';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+        }
+
+        function clearSignature() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function saveSignature() {
+            const signatureData = canvas.toDataURL('image/png');
+            document.getElementById('{!$Component.signatureData}').value = signatureData;
+            document.getElementById('{!$Component.submitForm}').click();
+        }
+    </script>
+</apex:page>
