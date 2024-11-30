@@ -23,17 +23,21 @@ global class ProcessServiceChargesBatch implements Database.Batchable<SObject>, 
                            JBP_Service_Quantity_Allocated__c, 
                            Opportunity_Product__r.JBP_Service_Offering_Start_Time__c, 
                            Opportunity_Product__r.JBP_Service_Offering_End_Time__c
-                    FROM Service_Schedule__r) // Adjust this to match the child relationship name
+                    FROM Service_Schedule__r) // Pulling the associated records from the Service Schedule which owns the downstream billing
             FROM JBP_Service__c
-            WHERE Id IN :serviceIds
+            WHERE Id IN :serviceIds //Use this for finding the Service ID"s linked to the service schedules for the batch
         ]);
     }
 
+    //Mapping used to own how the service charges are generated.
     global void execute(Database.BatchableContext BC, List<JBP_Service__c> services) {
         List<JBP_Service_Charge__c> chargesToInsert = new List<JBP_Service_Charge__c>();
         Map<Id, String> serviceCommentsMap = new Map<Id, String>();
         Map<Id, String> serviceStatusMap = new Map<Id, String>();
 
+        //This loop iterates through each JBP_Service__c record in the batch, initializing a blank comments string for tracking any 
+        //issues or observations for the service and a createdRecord flag to determine if a charge record is 
+        //successfully created for the service.
         for (JBP_Service__c service : services) {
             String comments = ''; // Replacing StringBuilder with a plain String
             Boolean createdRecord = false;
