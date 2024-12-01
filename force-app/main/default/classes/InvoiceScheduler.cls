@@ -1,0 +1,18 @@
+/**
+ * @description       : 
+ * @author            : jamesperram@gmail.com
+ * @group             : 
+ * @last modified on  : 12-02-2024
+ * @last modified by  : jamesperram@gmail.com
+**/
+global class InvoiceScheduler implements Schedulable {
+    global void execute(SchedulableContext sc) {
+        // Calculate last week's start and end dates
+        Date today = System.today();
+        Date startDate = today.toStartOfWeek().addDays(-7); // Last week's Monday
+        Date endDate = startDate.addDays(6);               // Last week's Sunday
+// Trigger the batch job with the calculated date range
+        GenerateInvoicesBatch batch = new GenerateInvoicesBatch(startDate, endDate);
+        Database.executeBatch(batch, 50);
+    }
+}
