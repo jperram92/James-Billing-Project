@@ -1,0 +1,17 @@
+<!--
+  @description       : 
+  @author            : jamesperram@gmail.com
+  @group             : 
+  @last modified on  : 12-02-2024
+  @last modified by  : jamesperram@gmail.com
+-->
+<template>
+    <lightning-card title="Run Invoice Batch">
+        <lightning-input type="date" label="Start Date" onchange={handleStartDate}></lightning-input>
+        <lightning-input type="date" label="End Date" onchange={handleEndDate}></lightning-input>
+        <lightning-button label="Run Batch" variant="brand" onclick={runBatch}></lightning-button>
+        <template if:true={message}>
+            <p>{message}</p>
+        </template>
+    </lightning-card>
+</template>
