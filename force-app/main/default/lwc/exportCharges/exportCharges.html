@@ -1,0 +1,58 @@
+<!--
+  @description       : 
+  @author            : jamesperram@gmail.com
+  @group             : 
+  @last modified on  : 12-02-2024
+  @last modified by  : jamesperram@gmail.com
+-->
+<template>
+    <lightning-card title="Export Charges" icon-name="utility:download">
+        <div class="slds-m-around_medium">
+            <!-- Start Date -->
+            <lightning-input
+                type="date"
+                label="Start Date"
+                value={startDate}
+                onchange={handleStartDate}>
+            </lightning-input>
+
+            <!-- End Date -->
+            <lightning-input
+                type="date"
+                label="End Date"
+                value={endDate}
+                onchange={handleEndDate}>
+            </lightning-input>
+
+            <!-- Export Button -->
+            <lightning-button
+                label="Export to CSV"
+                variant="brand"
+                onclick={exportToCSV}
+                disabled={isLoading}>
+            </lightning-button>
+
+            <!-- Loading Spinner -->
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+            </template>
+
+            <!-- Message -->
+            <template if:true={message}>
+                <p class={messageClass}>{message}</p>
+            </template>
+
+            <!-- Debug Log Section -->
+            <template if:true={debugLog.length}>
+                <div class="debug-log">
+                    <h3>Debug Log</h3>
+                    <ul>
+                        <template for:each={debugLog} for:item="log">
+                            <li key={log}>{log}</li>
+                        </template>
+                    </ul>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>

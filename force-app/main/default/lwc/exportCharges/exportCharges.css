@@ -1,0 +1,42 @@
+/* General Styling */
+.lightning-card {
+    margin: 20px;
+}
+
+/* Spinner Styling */
+.slds-spinner {
+    margin: 10px auto;
+}
+
+/* Message Styling */
+p {
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+p.success {
+    color: #4caf50; /* Green for success */
+}
+
+p.error {
+    color: #f44336; /* Red for error */
+}
+
+/* Debug Log Styling */
+.debug-log {
+    margin-top: 20px;
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+}
+
+.debug-log h3 {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.debug-log ul {
+    list-style: disc;
+    margin: 0;
+    padding-left: 20px;
+}
