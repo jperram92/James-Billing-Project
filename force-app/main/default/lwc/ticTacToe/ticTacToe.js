@@ -5,23 +5,26 @@ export default class TicTacToe extends LightningElement {
         ['', '', ''],
         ['', '', ''],
         ['', '', '']
-    ]; // Initial board
-    @track currentPlayer = 'X'; // Tracks current player
-    @track statusMessage = 'Player X\'s turn'; // Tracks game status
+    ];
+    @track currentPlayer = 'X';
+    @track statusMessage = 'Player X\'s turn';
 
     handleCellClick(event) {
         const { row, col } = event.detail;
 
-        // Update the board if the cell is empty
+        // Update the board manually for debugging
         if (!this.board[row][col]) {
             this.board[row][col] = this.currentPlayer;
+
+            // Force reactivity by recreating the board array
+            this.board = [...this.board];
 
             if (this.checkWin()) {
                 this.statusMessage = `Player ${this.currentPlayer} wins!`;
             } else if (this.checkDraw()) {
                 this.statusMessage = 'It\'s a draw!';
             } else {
-                this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X'; // Switch turn
+                this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X';
                 this.statusMessage = `Player ${this.currentPlayer}'s turn`;
             }
         }
@@ -29,15 +32,12 @@ export default class TicTacToe extends LightningElement {
 
     checkWin() {
         const winPatterns = [
-            // Rows
             [this.board[0][0], this.board[0][1], this.board[0][2]],
             [this.board[1][0], this.board[1][1], this.board[1][2]],
             [this.board[2][0], this.board[2][1], this.board[2][2]],
-            // Columns
             [this.board[0][0], this.board[1][0], this.board[2][0]],
             [this.board[0][1], this.board[1][1], this.board[2][1]],
             [this.board[0][2], this.board[1][2], this.board[2][2]],
-            // Diagonals
             [this.board[0][0], this.board[1][1], this.board[2][2]],
             [this.board[0][2], this.board[1][1], this.board[2][0]],
         ];

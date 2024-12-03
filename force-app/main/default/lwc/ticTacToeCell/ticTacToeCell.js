@@ -1,19 +1,23 @@
 import { LightningElement, api } from 'lwc';
 
 export default class TicTacToeCell extends LightningElement {
-    @api value; // Cell value ("X", "O", or "")
-    @api row; // Row index
-    @api col; // Column index
+    @api value = ''; // Default value is an empty string
+    @api row;
+    @api col;
 
     handleClick() {
         console.log(`Cell clicked: Row ${this.row}, Col ${this.col}, Value: ${this.value}`);
-        if (this.row !== undefined && this.col !== undefined) {
-            this.dispatchEvent(
-                new CustomEvent('click', {
-                    detail: { row: this.row, col: this.col },
-                })
-            );
+
+        // Hardcode the value for testing
+        if (!this.value) {
+            this.value = 'X'; // Default hardcoded value
         }
+
+        this.dispatchEvent(
+            new CustomEvent('click', {
+                detail: { row: this.row, col: this.col },
+            })
+        );
     }
 
     connectedCallback() {
