@@ -1,0 +1,32 @@
+.board {
+    display: grid;
+    gap: 10px;
+    justify-content: center;
+    margin: 0 auto;
+    max-width: 400px; /* Adjust the width as needed */
+}
+
+.row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.cell {
+    width: 100px; /* Adjust size */
+    height: 100px; /* Adjust size */
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+}
+
+.cell:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.game-info {
+    text-align: center;
+    margin-bottom: 20px;
+}

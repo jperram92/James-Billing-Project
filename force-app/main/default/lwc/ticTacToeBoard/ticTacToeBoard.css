@@ -1,0 +1,9 @@
+.board {
+    display: grid;
+    justify-content: center;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+}

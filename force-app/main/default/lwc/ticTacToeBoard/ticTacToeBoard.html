@@ -1,0 +1,24 @@
+<!--
+  @description       : 
+  @author            : jamesperram@gmail.com
+  @group             : 
+  @last modified on  : 12-03-2024
+  @last modified by  : jamesperram@gmail.com
+-->
+<template>
+    <div class="board">
+        <template for:each={boardWithKeys} for:item="row" for:index="rowIndex">
+            <div key={row.rowKey} class="row">
+                <template for:each={row.cells} for:item="cell" for:index="colIndex">
+                    <c-tic-tac-toe-cell
+                        key={cell.cellKey}
+                        value={cell.value}
+                        row={rowIndex}
+                        col={colIndex}
+                        onclick={handleCellClick}
+                    ></c-tic-tac-toe-cell>
+                </template>
+            </div>
+        </template>
+    </div>
+</template>

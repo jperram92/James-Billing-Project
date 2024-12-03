@@ -1,0 +1,21 @@
+<!--
+  @description       : 
+  @author            : jamesperram@gmail.com
+  @group             : 
+  @last modified on  : 12-03-2024
+  @last modified by  : jamesperram@gmail.com
+-->
+<template>
+    <lightning-card title="Tic Tac Toe" icon-name="utility:apps">
+        <div class="game-info">
+            <p>{statusMessage}</p>
+        </div>
+        <c-tic-tac-toe-board
+            board={board}
+            oncellclick={handleCellClick}
+        ></c-tic-tac-toe-board>
+        <div class="restart-container">
+            <lightning-button label="Restart Game" variant="brand" onclick={resetGame}></lightning-button>
+        </div>
+    </lightning-card>
+</template>
