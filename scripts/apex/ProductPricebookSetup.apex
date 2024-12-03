@@ -63,3 +63,6 @@ public class ProductPricebookSetup {
         System.debug('Created ' + customEntries.size() + ' Custom Pricebook Entries for Pricebook: ' + customPricebook.Name);
     }
 }
+
+// Execute Anonymous
+//ProductPricebookSetup.generateRandomProductsAndEntries();
