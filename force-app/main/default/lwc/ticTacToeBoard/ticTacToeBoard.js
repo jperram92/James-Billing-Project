@@ -5,11 +5,11 @@ export default class TicTacToeBoard extends LightningElement {
 
     @api
     set board(value) {
-        console.log('Setting board:', value); // Debugging the board input
         if (value && Array.isArray(value)) {
+            console.log('Updating boardWithKeys with new board:', value); // Debugging
             this.boardWithKeys = this.addKeysToBoard(value);
         } else {
-            console.error('Invalid board value:', value); // Log invalid values
+            console.error('Invalid board value:', value); // Debugging
             this.boardWithKeys = [];
         }
     }
@@ -19,18 +19,11 @@ export default class TicTacToeBoard extends LightningElement {
     }
 
     handleCellClick(event) {
-        try {
-            const { row, col } = event.detail;
-
-            // Check if row or col is undefined
-            if (row === undefined || col === undefined) {
-                throw new Error(`Invalid row or col: row=${row}, col=${col}`);
-            }
-
-            console.log('Dispatching cell click event:', { row, col }); // Debugging event details
+        const { row, col } = event.detail;
+        if (row !== undefined && col !== undefined) {
             this.dispatchEvent(new CustomEvent('cellclick', { detail: { row, col } }));
-        } catch (error) {
-            console.error('Error in handleCellClick:', error); // Log any errors
+        } else {
+            console.error('Invalid row or col in handleCellClick:', { row, col });
         }
     }
 
@@ -38,10 +31,13 @@ export default class TicTacToeBoard extends LightningElement {
         try {
             return board.map((row, rowIndex) => ({
                 rowKey: `row-${rowIndex}`,
-                cells: row.map((cell, colIndex) => ({
-                    cellKey: `cell-${rowIndex}-${colIndex}`,
-                    value: cell
-                }))
+                cells: row.map((cell, colIndex) => {
+                    console.log(`Setting value for cell [${rowIndex}, ${colIndex}]: ${cell}`);
+                    return {
+                        cellKey: `cell-${rowIndex}-${colIndex}`,
+                        value: cell // Pass cell value dynamically
+                    };
+                })
             }));
         } catch (error) {
             console.error('Error in addKeysToBoard:', error); // Log mapping errors
