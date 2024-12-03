@@ -1,0 +1,48 @@
+<template>
+    <lightning-card title="Add Opportunity Products" icon-name="custom:custom63">
+        <div class="slds-m-around_medium">
+            <!-- Display Error Messages -->
+            <template if:true={errorMessage}>
+                <div class="slds-text-color_error slds-m-bottom_medium">
+                    {errorMessage}
+                </div>
+            </template>
+
+            <!-- Display Opportunity Details -->
+            <p><strong>Opportunity:</strong> {opportunityName}</p>
+            <p><strong>Customer:</strong> {customerName}</p>
+            <p><strong>Contact:</strong> {contactName}</p>
+
+            <!-- Pricebook Selection -->
+            <lightning-combobox
+                name="pricebook"
+                label="Select Pricebook"
+                value={selectedPricebook}
+                placeholder="Choose a Pricebook"
+                options={pricebookOptions}
+                onchange={handlePricebookChange}>
+            </lightning-combobox>
+
+            <!-- Product Selection -->
+            <lightning-datatable
+                key-field="id"
+                data={productData}
+                columns={columns}
+                onrowselection={handleRowSelection}>
+            </lightning-datatable>
+
+            <!-- Additional Inputs for Product Details -->
+            <template if:true={selectedProducts.length}>
+                <div class="slds-m-top_medium">
+                    <lightning-input type="date" label="Service Date" value={serviceDate} onchange={handleInputChange} data-field="serviceDate"></lightning-input>
+                    <lightning-input type="date" label="Service Offering Start Time" value={serviceStartTime} onchange={handleInputChange} data-field="serviceStartTime"></lightning-input>
+                    <lightning-input type="date" label="Service Offering End Time" value={serviceEndTime} onchange={handleInputChange} data-field="serviceEndTime"></lightning-input>
+                    <lightning-input type="text" label="Description" value={description} onchange={handleInputChange} data-field="description"></lightning-input>
+                    <lightning-input type="number" label="Quantity" value={quantity} onchange={handleInputChange} data-field="quantity"></lightning-input>
+                    <lightning-input type="number" label="Discount (%)" value={discount} onchange={handleInputChange} data-field="discount"></lightning-input>
+                </div>
+                <lightning-button variant="brand" label="Create Opportunity Products" onclick={createOpportunityProducts} class="slds-m-top_medium"></lightning-button>
+            </template>
+        </div>
+    </lightning-card>
+</template>
