@@ -3,9 +3,12 @@
  * @group             : 
  * @last modified on  : 12-04-2024
  * @last modified by  : jamesperram@gmail.com
- **/
+**/
 public with sharing class OpportunityProductController {
     
+    /**
+     * Fetch Opportunity Details including associated Pricebook and Pre-Check Form Pricebook
+     */
     @AuraEnabled
     public static Opportunity getOpportunityDetails(Id opportunityId) {
         try {
@@ -14,12 +17,15 @@ public with sharing class OpportunityProductController {
                 throw new AuraHandledException('Invalid Opportunity ID.');
             }
 
-            // Fetch Opportunity details, including the related Account and linked Pre_Check_Form__c
+            // Fetch Opportunity details, including related Account and Pre-Check Form details
             Opportunity opp = [
                 SELECT Id, 
                        Name, 
                        Account.Name, 
-                       Pre_Check_Form__r.Contact__c, 
+                       Pricebook2Id, 
+                       Pricebook2.Name, 
+                       Pre_Check_Form__r.Price_Book__c, 
+                       Pre_Check_Form__r.Price_Book__r.Name, 
                        Pre_Check_Form__r.Contact__r.Name
                 FROM Opportunity
                 WHERE Id = :opportunityId
@@ -40,6 +46,9 @@ public with sharing class OpportunityProductController {
         }
     }
 
+    /**
+     * Fetch Products available in the Pricebook assigned to the Opportunity
+     */
     @AuraEnabled
     public static List<PricebookEntry> getAvailableProducts(Id opportunityId) {
         try {
@@ -85,6 +94,9 @@ public with sharing class OpportunityProductController {
         }
     }
 
+    /**
+     * Fetch all active Pricebooks
+     */
     @AuraEnabled
     public static List<Pricebook2> getPricebooks() {
         try {
@@ -105,8 +117,16 @@ public with sharing class OpportunityProductController {
         }
     }
 
+    /**
+     * Create Opportunity Products and return summary
+     */
     @AuraEnabled
-    public static void createOpportunityProducts(List<OpportunityLineItem> opportunityProducts) {
+    public static Map<String, Object> createOpportunityProducts(List<OpportunityLineItem> opportunityProducts) {
+        Map<String, Object> response = new Map<String, Object>();
+        List<OpportunityLineItem> successfulRecords = new List<OpportunityLineItem>();
+        List<OpportunityLineItem> failedRecords = new List<OpportunityLineItem>();
+        Decimal totalValue = 0;
+
         try {
             // Validate input
             if (opportunityProducts == null || opportunityProducts.isEmpty()) {
@@ -115,16 +135,33 @@ public with sharing class OpportunityProductController {
 
             System.debug('Creating Opportunity Products: ' + opportunityProducts);
 
-            // Insert new Opportunity Products
-            insert opportunityProducts;
+            // Insert new Opportunity Products and track success/failure
+            Database.SaveResult[] results = Database.insert(opportunityProducts, false);
+            for (Integer i = 0; i < results.size(); i++) {
+                if (results[i].isSuccess()) {
+                    successfulRecords.add(opportunityProducts[i]);
+                    totalValue += opportunityProducts[i].UnitPrice * opportunityProducts[i].Quantity;
+                } else {
+                    failedRecords.add(opportunityProducts[i]);
+                }
+            }
 
-            System.debug('Opportunity Products created successfully.');
+            // Populate response
+            response.put('successfulCount', successfulRecords.size());
+            response.put('failedCount', failedRecords.size());
+            response.put('totalValue', totalValue);
+            response.put('failedRecords', failedRecords);
+
+            System.debug('Opportunity Products created successfully: ' + successfulRecords.size());
+            System.debug('Failed Opportunity Products: ' + failedRecords.size());
         } catch (DmlException e) {
             System.debug('Error in createOpportunityProducts: ' + e.getMessage());
-            throw new AuraHandledException('Error creating Opportunity Products: ' + e.getDmlMessage(0));
+            throw new AuraHandledException('Error creating Opportunity Products: ' + e.getMessage());
         } catch (Exception e) {
             System.debug('Error in createOpportunityProducts: ' + e.getMessage());
             throw new AuraHandledException('Error creating Opportunity Products: ' + e.getMessage());
         }
+
+        return response;
     }
 }

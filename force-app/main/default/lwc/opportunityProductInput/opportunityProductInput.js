@@ -9,13 +9,17 @@ export default class OpportunityProductInput extends LightningElement {
     @track opportunityName = '';
     @track customerName = '';
     @track contactName = 'N/A';
+    @track opportunityPricebook = 'N/A';
+    @track preCheckFormPricebook = 'N/A';
     @track pricebookOptions = [];
     @track selectedPricebook = '';
     @track productData = [];
     @track selectedProducts = [];
     @track errorMessage = ''; // Error message for UI display
+    @track successMessage = ''; // Success message for UI display
+    @track totalProductsAdded = 0; // Total number of products added
+    @track totalValueAdded = 0; // Total value of products added
 
-    serviceDate = '';
     serviceStartTime = '';
     serviceEndTime = '';
     description = '';
@@ -29,12 +33,9 @@ export default class OpportunityProductInput extends LightningElement {
     ];
 
     connectedCallback() {
-        console.log('Record ID:', this.recordId); // Check if recordId is populated
         if (this.recordId) {
             this.fetchOpportunityDetails();
-            this.loadProducts();
         } else {
-            console.error('No recordId passed to the component.');
             this.errorMessage = 'Error: No recordId available. Please add this component to an Opportunity record page.';
         }
     }
@@ -45,9 +46,17 @@ export default class OpportunityProductInput extends LightningElement {
                 this.opportunityName = data.Name;
                 this.customerName = data.Account ? data.Account.Name : 'No Account';
                 this.contactName = data.Pre_Check_Form__r?.Contact__r?.Name || 'No Contact';
+                this.opportunityPricebook = data.Pricebook2?.Name || 'No Pricebook';
+                this.preCheckFormPricebook = data.Pre_Check_Form__r?.Price_Book__r?.Name || 'No Pricebook';
+
+                if (data.Pricebook2Id) {
+                    this.selectedPricebook = data.Pricebook2Id;
+                    this.loadProducts();
+                } else {
+                    this.loadPricebooks();
+                }
             })
             .catch((error) => {
-                console.error('Error fetching Opportunity details:', error);
                 this.errorMessage = 'Error fetching Opportunity details: ' + (error.body?.message || error.message);
             });
     }
@@ -61,7 +70,6 @@ export default class OpportunityProductInput extends LightningElement {
                 }));
             })
             .catch((error) => {
-                console.error('Error loading Pricebooks:', error);
                 this.errorMessage = 'Error loading Pricebooks: ' + (error.body?.message || error.message);
             });
     }
@@ -74,7 +82,6 @@ export default class OpportunityProductInput extends LightningElement {
     loadProducts() {
         getAvailableProducts({ opportunityId: this.recordId })
             .then((data) => {
-                console.log('Fetched Products:', data);
                 this.productData = data.map((entry) => ({
                     id: entry.Id,
                     productId: entry.Product2Id,
@@ -85,8 +92,7 @@ export default class OpportunityProductInput extends LightningElement {
                 this.errorMessage = ''; // Clear any previous error
             })
             .catch((error) => {
-                console.error('Error loading Products:', error);
-                this.errorMessage = error.body?.message || 'Unknown error loading Products.';
+                this.errorMessage = 'Error loading Products: ' + (error.body?.message || error.message);
             });
     }
 
@@ -111,15 +117,14 @@ export default class OpportunityProductInput extends LightningElement {
             JBP_Service_Offering_End_Time__c: this.serviceEndTime
         }));
 
-        console.log('Opportunity Products Payload:', opportunityProducts);
-
         createOpportunityProducts({ opportunityProducts })
-            .then(() => {
-                console.log('Opportunity Products Created Successfully');
+            .then((result) => {
                 this.errorMessage = ''; // Clear any previous errors
+                this.successMessage = 'Products added successfully!';
+                this.totalProductsAdded = result.successfulCount || 0;
+                this.totalValueAdded = result.totalValue || 0;
             })
             .catch((error) => {
-                console.error('Error creating Opportunity Products:', error);
                 this.errorMessage = 'Error creating Opportunity Products: ' + (error.body?.message || error.message);
             });
     }
