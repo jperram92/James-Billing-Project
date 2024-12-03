@@ -1,0 +1,16 @@
+[
+    {
+        "Name": "Product A",
+        "ProductCode": "PROD_A",
+        "Description": "Sample Product A",
+        "IsActive": true,
+        "Family": "Hardware"
+    },
+    {
+        "Name": "Product B",
+        "ProductCode": "PROD_B",
+        "Description": "Sample Product B",
+        "IsActive": true,
+        "Family": "Software"
+    }
+]

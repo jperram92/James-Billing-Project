@@ -1,0 +1,14 @@
+[
+    {
+        "ProductCode": "PROD_A",
+        "PricebookName": "Premium Pricebook",
+        "UnitPrice": 150.0,
+        "IsActive": true
+    },
+    {
+        "ProductCode": "PROD_B",
+        "PricebookName": "Premium Pricebook",
+        "UnitPrice": 250.0,
+        "IsActive": true
+    }
+]
