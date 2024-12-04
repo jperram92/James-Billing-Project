@@ -14,11 +14,16 @@ export default class OpportunityProductInput extends LightningElement {
     @track pricebookOptions = [];
     @track selectedPricebook = '';
     @track productData = [];
+    @track currentPageProducts = [];
     @track selectedProducts = [];
     @track errorMessage = ''; // Error message for UI display
     @track successMessage = ''; // Success message for UI display
     @track totalProductsAdded = 0; // Total number of products added
     @track totalValueAdded = 0; // Total value of products added
+    @track searchKey = ''; // Search input value
+    @track currentPage = 1; // Current page number
+    @track totalPages = 1; // Total pages
+    pageSize = 5; // Number of products per page
 
     serviceStartTime = '';
     serviceEndTime = '';
@@ -90,19 +95,59 @@ export default class OpportunityProductInput extends LightningElement {
                     unitPrice: entry.UnitPrice
                 }));
                 this.errorMessage = ''; // Clear any previous error
+
+                // Initialize pagination
+                this.totalPages = Math.ceil(this.productData.length / this.pageSize);
+                this.updateCurrentPageProducts();
             })
             .catch((error) => {
                 this.errorMessage = 'Error loading Products: ' + (error.body?.message || error.message);
             });
     }
 
-    handleRowSelection(event) {
-        this.selectedProducts = event.detail.selectedRows;
+    updateCurrentPageProducts() {
+        console.log('Updating Current Page Products');
+        console.log(`Current Page: ${this.currentPage}, Total Pages: ${this.totalPages}`);
+        
+        const start = (this.currentPage - 1) * this.pageSize;
+        const end = start + this.pageSize;
+
+        const filteredProducts = this.productData.filter((product) =>
+            product.productName.toLowerCase().includes(this.searchKey.toLowerCase())
+        );
+
+        this.totalPages = Math.ceil(filteredProducts.length / this.pageSize);
+        console.log(`Filtered Products: ${filteredProducts.length}, Total Pages: ${this.totalPages}`);
+
+        this.currentPageProducts = filteredProducts.slice(start, end);
+
+        // Ensure currentPage is within valid range
+        if (this.currentPage > this.totalPages) {
+            this.currentPage = this.totalPages;
+        } else if (this.currentPage < 1) {
+            this.currentPage = 1;
+        }
+        console.log(`Final Current Page: ${this.currentPage}`);
     }
 
     handleInputChange(event) {
         const field = event.target.dataset.field;
         this[field] = event.target.value;
+
+        if (field === 'searchKey') {
+            this.currentPage = 1;
+            this.updateCurrentPageProducts();
+        }
+    }
+
+    handleNextPage() {
+        console.log(`Navigating to the next page. Current page: ${this.currentPage}`);
+        if (this.currentPage < this.totalPages) {
+            this.currentPage++;
+        } else {
+            this.currentPage = 1; // Loop back to the first page
+        }
+        this.updateCurrentPageProducts();
     }
 
     createOpportunityProducts() {

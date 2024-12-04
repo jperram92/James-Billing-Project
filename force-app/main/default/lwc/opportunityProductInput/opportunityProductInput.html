@@ -1,7 +1,7 @@
 <template>
     <lightning-card title="Add Opportunity Products" icon-name="custom:custom63">
         <div class="slds-m-around_medium">
-            <!-- Display Success Messages -->
+            <!-- Success Messages -->
             <template if:true={successMessage}>
                 <div class="slds-text-color_success slds-m-bottom_medium">
                     {successMessage} <br />
@@ -10,51 +10,66 @@
                 </div>
             </template>
 
-            <!-- Display Error Messages -->
+            <!-- Error Messages -->
             <template if:true={errorMessage}>
                 <div class="slds-text-color_error slds-m-bottom_medium">
                     {errorMessage}
                 </div>
             </template>
 
-            <!-- Display Opportunity Details -->
+            <!-- Opportunity Details -->
             <p><strong>Opportunity:</strong> {opportunityName}</p>
             <p><strong>Customer:</strong> {customerName}</p>
             <p><strong>Contact:</strong> {contactName}</p>
             <p><strong>Opportunity Pricebook:</strong> {opportunityPricebook}</p>
             <p><strong>Pre-Check Form Pricebook:</strong> {preCheckFormPricebook}</p>
 
-            <!-- Pricebook Selection -->
-            <lightning-combobox
-                name="pricebook"
-                label="Select Pricebook"
-                value={selectedPricebook}
-                placeholder="Choose a Pricebook"
-                options={pricebookOptions}
-                onchange={handlePricebookChange}>
-            </lightning-combobox>
+            <!-- Search and Pagination -->
+            <lightning-input
+                type="text"
+                label="Search Products"
+                value={searchKey}
+                onchange={handleInputChange}
+                data-field="searchKey">
+            </lightning-input>
 
-            <!-- Product Selection -->
             <lightning-datatable
                 key-field="id"
-                data={productData}
+                data={currentPageProducts}
                 columns={columns}
                 onrowselection={handleRowSelection}>
             </lightning-datatable>
 
-            <!-- Additional Inputs for Product Details -->
+            <div class="slds-grid slds-m-top_medium slds-m-bottom_medium">
+                <!-- Always Disabled Previous Button -->
+                <lightning-button
+                    label="Previous"
+                    disabled="true">
+                </lightning-button>
+                
+                <!-- Pagination Info -->
+                <span class="slds-m-horizontal_medium">Page {currentPage} of {totalPages}</span>
+                
+                <!-- Next Button -->
+                <lightning-button
+                    label="Next"
+                    onclick={handleNextPage}>
+                </lightning-button>
+            </div>
+
+            <!-- Additional Inputs -->
             <template if:true={selectedProducts.length}>
                 <div class="slds-m-top_medium">
                     <lightning-input
                         type="date"
-                        label="Service Offering Start Date"
+                        label="Service Start Date"
                         value={serviceStartTime}
                         onchange={handleInputChange}
                         data-field="serviceStartTime">
                     </lightning-input>
                     <lightning-input
                         type="date"
-                        label="Service Offering End Date"
+                        label="Service End Date"
                         value={serviceEndTime}
                         onchange={handleInputChange}
                         data-field="serviceEndTime">
