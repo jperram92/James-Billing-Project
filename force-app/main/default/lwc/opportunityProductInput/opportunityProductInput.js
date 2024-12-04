@@ -178,4 +178,9 @@ export default class OpportunityProductInput extends LightningElement {
     get selectedRowIds() {
         return Array.from(this.selectedProductsMap.keys());
     }
+
+    // Getter for Selected Products Summary
+    get selectedProductsSummary() {
+        return Array.from(this.selectedProductsMap.values());
+    }
 }

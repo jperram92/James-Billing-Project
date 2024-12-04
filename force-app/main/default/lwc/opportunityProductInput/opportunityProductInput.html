@@ -50,6 +50,18 @@
                 <span class="slds-m-horizontal_medium">Page {currentPage} of {totalPages}</span>
             </div>
 
+            <!-- Selected Products Summary -->
+            <template if:true={selectedProductsSummary.length}>
+                <div class="slds-m-top_medium">
+                    <h3 class="slds-text-heading_medium">Selected Products Summary</h3>
+                    <lightning-datatable
+                        key-field="id"
+                        data={selectedProductsSummary}
+                        columns={columns}>
+                    </lightning-datatable>
+                </div>
+            </template>
+
             <!-- Additional Inputs -->
             <template if:true={selectedProductsMap.size}>
                 <div class="slds-m-top_medium">
