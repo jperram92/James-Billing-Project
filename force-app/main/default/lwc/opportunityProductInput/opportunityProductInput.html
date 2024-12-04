@@ -37,28 +37,21 @@
                 key-field="id"
                 data={currentPageProducts}
                 columns={columns}
-                onrowselection={handleRowSelection}>
+                onrowselection={handleRowSelection}
+                selected-rows={selectedRowIds}>
             </lightning-datatable>
 
             <div class="slds-grid slds-m-top_medium slds-m-bottom_medium">
-                <!-- Always Disabled Previous Button -->
-                <lightning-button
-                    label="Previous"
-                    disabled="true">
-                </lightning-button>
-                
-                <!-- Pagination Info -->
-                <span class="slds-m-horizontal_medium">Page {currentPage} of {totalPages}</span>
-                
-                <!-- Next Button -->
                 <lightning-button
                     label="Next"
-                    onclick={handleNextPage}>
+                    onclick={handleNextPage}
+                    disabled={currentPage >= totalPages}>
                 </lightning-button>
+                <span class="slds-m-horizontal_medium">Page {currentPage} of {totalPages}</span>
             </div>
 
             <!-- Additional Inputs -->
-            <template if:true={selectedProducts.length}>
+            <template if:true={selectedProductsMap.size}>
                 <div class="slds-m-top_medium">
                     <lightning-input
                         type="date"

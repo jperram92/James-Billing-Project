@@ -5,7 +5,7 @@ import getPricebooks from '@salesforce/apex/OpportunityProductController.getPric
 import createOpportunityProducts from '@salesforce/apex/OpportunityProductController.createOpportunityProducts';
 
 export default class OpportunityProductInput extends LightningElement {
-    @api recordId; // Current Opportunity ID
+    @api recordId;
     @track opportunityName = '';
     @track customerName = '';
     @track contactName = 'N/A';
@@ -15,15 +15,15 @@ export default class OpportunityProductInput extends LightningElement {
     @track selectedPricebook = '';
     @track productData = [];
     @track currentPageProducts = [];
-    @track selectedProducts = [];
-    @track errorMessage = ''; // Error message for UI display
-    @track successMessage = ''; // Success message for UI display
-    @track totalProductsAdded = 0; // Total number of products added
-    @track totalValueAdded = 0; // Total value of products added
-    @track searchKey = ''; // Search input value
-    @track currentPage = 1; // Current page number
-    @track totalPages = 1; // Total pages
-    pageSize = 5; // Number of products per page
+    @track selectedProductsMap = new Map(); // Track selected rows across pages
+    @track errorMessage = '';
+    @track successMessage = '';
+    @track totalProductsAdded = 0;
+    @track totalValueAdded = 0;
+    @track searchKey = '';
+    @track currentPage = 1;
+    @track totalPages = 1;
+    pageSize = 5;
 
     serviceStartTime = '';
     serviceEndTime = '';
@@ -94,9 +94,7 @@ export default class OpportunityProductInput extends LightningElement {
                     productCode: entry.Product2.ProductCode,
                     unitPrice: entry.UnitPrice
                 }));
-                this.errorMessage = ''; // Clear any previous error
-
-                // Initialize pagination
+                this.errorMessage = '';
                 this.totalPages = Math.ceil(this.productData.length / this.pageSize);
                 this.updateCurrentPageProducts();
             })
@@ -106,28 +104,34 @@ export default class OpportunityProductInput extends LightningElement {
     }
 
     updateCurrentPageProducts() {
-        console.log('Updating Current Page Products');
-        console.log(`Current Page: ${this.currentPage}, Total Pages: ${this.totalPages}`);
-        
         const start = (this.currentPage - 1) * this.pageSize;
         const end = start + this.pageSize;
-
         const filteredProducts = this.productData.filter((product) =>
             product.productName.toLowerCase().includes(this.searchKey.toLowerCase())
         );
-
         this.totalPages = Math.ceil(filteredProducts.length / this.pageSize);
-        console.log(`Filtered Products: ${filteredProducts.length}, Total Pages: ${this.totalPages}`);
-
         this.currentPageProducts = filteredProducts.slice(start, end);
 
-        // Ensure currentPage is within valid range
-        if (this.currentPage > this.totalPages) {
-            this.currentPage = this.totalPages;
-        } else if (this.currentPage < 1) {
-            this.currentPage = 1;
-        }
-        console.log(`Final Current Page: ${this.currentPage}`);
+        // Update selected state for products in the current page
+        this.currentPageProducts.forEach((product) => {
+            product.isSelected = this.selectedProductsMap.has(product.id);
+        });
+    }
+
+    handleRowSelection(event) {
+        const selectedRows = event.detail.selectedRows;
+
+        // Add selected rows to the map
+        selectedRows.forEach((row) => {
+            this.selectedProductsMap.set(row.id, row);
+        });
+
+        // Remove rows that were deselected
+        this.currentPageProducts.forEach((row) => {
+            if (!selectedRows.find((selected) => selected.id === row.id)) {
+                this.selectedProductsMap.delete(row.id);
+            }
+        });
     }
 
     handleInputChange(event) {
@@ -141,17 +145,14 @@ export default class OpportunityProductInput extends LightningElement {
     }
 
     handleNextPage() {
-        console.log(`Navigating to the next page. Current page: ${this.currentPage}`);
         if (this.currentPage < this.totalPages) {
             this.currentPage++;
-        } else {
-            this.currentPage = 1; // Loop back to the first page
+            this.updateCurrentPageProducts();
         }
-        this.updateCurrentPageProducts();
     }
 
     createOpportunityProducts() {
-        const opportunityProducts = this.selectedProducts.map((product) => ({
+        const opportunityProducts = Array.from(this.selectedProductsMap.values()).map((product) => ({
             OpportunityId: this.recordId,
             PricebookEntryId: product.id,
             Quantity: this.quantity,
@@ -164,7 +165,7 @@ export default class OpportunityProductInput extends LightningElement {
 
         createOpportunityProducts({ opportunityProducts })
             .then((result) => {
-                this.errorMessage = ''; // Clear any previous errors
+                this.errorMessage = '';
                 this.successMessage = 'Products added successfully!';
                 this.totalProductsAdded = result.successfulCount || 0;
                 this.totalValueAdded = result.totalValue || 0;
@@ -172,5 +173,9 @@ export default class OpportunityProductInput extends LightningElement {
             .catch((error) => {
                 this.errorMessage = 'Error creating Opportunity Products: ' + (error.body?.message || error.message);
             });
+    }
+
+    get selectedRowIds() {
+        return Array.from(this.selectedProductsMap.keys());
     }
 }
