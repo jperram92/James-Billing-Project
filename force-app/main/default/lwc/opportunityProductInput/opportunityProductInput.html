@@ -43,9 +43,14 @@
 
             <div class="slds-grid slds-m-top_medium slds-m-bottom_medium">
                 <lightning-button
+                    label="Previous"
+                    onclick={handlePreviousPage}
+                    disabled={isPreviousDisabled}>
+                </lightning-button>
+                <lightning-button
                     label="Next"
                     onclick={handleNextPage}
-                    disabled={currentPage >= totalPages}>
+                    disabled={isNextDisabled}>
                 </lightning-button>
                 <span class="slds-m-horizontal_medium">Page {currentPage} of {totalPages}</span>
             </div>

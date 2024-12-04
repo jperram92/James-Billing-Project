@@ -14,8 +14,9 @@ export default class OpportunityProductInput extends LightningElement {
     @track pricebookOptions = [];
     @track selectedPricebook = '';
     @track productData = [];
+    @track filteredData = [];
     @track currentPageProducts = [];
-    @track selectedProductsMap = new Map(); // Track selected rows across pages
+    @track selectedProductsMap = new Map();
     @track errorMessage = '';
     @track successMessage = '';
     @track totalProductsAdded = 0;
@@ -94,8 +95,9 @@ export default class OpportunityProductInput extends LightningElement {
                     productCode: entry.Product2.ProductCode,
                     unitPrice: entry.UnitPrice
                 }));
+                this.filteredData = [...this.productData];
                 this.errorMessage = '';
-                this.totalPages = Math.ceil(this.productData.length / this.pageSize);
+                this.totalPages = Math.ceil(this.filteredData.length / this.pageSize);
                 this.updateCurrentPageProducts();
             })
             .catch((error) => {
@@ -103,16 +105,21 @@ export default class OpportunityProductInput extends LightningElement {
             });
     }
 
+    applySearchFilter() {
+        this.filteredData = this.productData.filter((product) =>
+            product.productName.toLowerCase().includes(this.searchKey.toLowerCase())
+        );
+        this.totalPages = Math.ceil(this.filteredData.length / this.pageSize);
+        this.currentPage = 1; // Reset to the first page
+        this.updateCurrentPageProducts();
+    }
+
     updateCurrentPageProducts() {
         const start = (this.currentPage - 1) * this.pageSize;
         const end = start + this.pageSize;
-        const filteredProducts = this.productData.filter((product) =>
-            product.productName.toLowerCase().includes(this.searchKey.toLowerCase())
-        );
-        this.totalPages = Math.ceil(filteredProducts.length / this.pageSize);
-        this.currentPageProducts = filteredProducts.slice(start, end);
+        this.currentPageProducts = this.filteredData.slice(start, end);
 
-        // Update selected state for products in the current page
+        // Ensure selected state is maintained for products on the current page
         this.currentPageProducts.forEach((product) => {
             product.isSelected = this.selectedProductsMap.has(product.id);
         });
@@ -139,14 +146,20 @@ export default class OpportunityProductInput extends LightningElement {
         this[field] = event.target.value;
 
         if (field === 'searchKey') {
-            this.currentPage = 1;
-            this.updateCurrentPageProducts();
+            this.applySearchFilter();
         }
     }
 
     handleNextPage() {
         if (this.currentPage < this.totalPages) {
             this.currentPage++;
+            this.updateCurrentPageProducts();
+        }
+    }
+
+    handlePreviousPage() {
+        if (this.currentPage > 1) {
+            this.currentPage--;
             this.updateCurrentPageProducts();
         }
     }
@@ -179,8 +192,16 @@ export default class OpportunityProductInput extends LightningElement {
         return Array.from(this.selectedProductsMap.keys());
     }
 
-    // Getter for Selected Products Summary
     get selectedProductsSummary() {
         return Array.from(this.selectedProductsMap.values());
+    }
+
+    // Pagination: Getters for disabled states
+    get isPreviousDisabled() {
+        return this.currentPage <= 1;
+    }
+
+    get isNextDisabled() {
+        return this.currentPage >= this.totalPages;
     }
 }
