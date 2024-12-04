@@ -1,0 +1,83 @@
+/* opportunityProductInput.css */
+
+/* General card styling */
+.slds-card {
+    background-color: #f4f6f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+/* Headers */
+.slds-card__header {
+    font-size: 18px;
+    font-weight: bold;
+    color: #2a3d66;
+    margin-bottom: 15px;
+}
+
+/* Success and Error Messages */
+.slds-text-color_success {
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #d4edda;
+    padding: 10px;
+    border-radius: 5px;
+    color: #155724;
+}
+
+.slds-text-color_error {
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #f8d7da;
+    padding: 10px;
+    border-radius: 5px;
+    color: #721c24;
+}
+
+/* Input Fields */
+.lightning-input {
+    margin-bottom: 15px;
+}
+
+/* Datatable Styling */
+.lightning-datatable {
+    margin-top: 20px;
+    border-radius: 10px;
+    border: 1px solid #d9d9d9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Pagination Buttons */
+.slds-grid .lightning-button {
+    margin: 0 10px;
+}
+
+.lightning-button {
+    background-color: #0176d3;
+    color: white;
+    border-radius: 5px;
+    font-weight: bold;
+    padding: 8px 16px;
+    transition: background-color 0.3s ease;
+}
+
+.lightning-button:hover {
+    background-color: #005bb5;
+}
+
+/* Selected Products Section */
+.selected-products {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f0f8ff;
+    border: 1px solid #d3e9ff;
+    border-radius: 10px;
+}
+
+.selected-products h3 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #004080;
+}

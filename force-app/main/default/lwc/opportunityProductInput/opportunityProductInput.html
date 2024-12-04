@@ -3,7 +3,7 @@
         <div class="slds-m-around_medium">
             <!-- Success Messages -->
             <template if:true={successMessage}>
-                <div class="slds-text-color_success slds-m-bottom_medium">
+                <div class="slds-text-color_success">
                     {successMessage} <br />
                     Total Products Added: {totalProductsAdded} <br />
                     Total Value: ${totalValueAdded}
@@ -12,12 +12,13 @@
 
             <!-- Error Messages -->
             <template if:true={errorMessage}>
-                <div class="slds-text-color_error slds-m-bottom_medium">
+                <div class="slds-text-color_error">
                     {errorMessage}
                 </div>
             </template>
 
             <!-- Opportunity Details -->
+            <div class="slds-card__header">Opportunity Details</div>
             <p><strong>Opportunity:</strong> {opportunityName}</p>
             <p><strong>Customer:</strong> {customerName}</p>
             <p><strong>Contact:</strong> {contactName}</p>
@@ -37,8 +38,8 @@
                 key-field="id"
                 data={currentPageProducts}
                 columns={columns}
-                onrowselection={handleRowSelection}
-                selected-rows={selectedRowIds}>
+                selected-rows={selectedRowIds}
+                onrowselection={handleRowSelection}>
             </lightning-datatable>
 
             <div class="slds-grid slds-m-top_medium slds-m-bottom_medium">
@@ -52,13 +53,13 @@
                     onclick={handleNextPage}
                     disabled={isNextDisabled}>
                 </lightning-button>
-                <span class="slds-m-horizontal_medium">Page {currentPage} of {totalPages}</span>
+                <span>Page {currentPage} of {totalPages}</span>
             </div>
 
             <!-- Selected Products Summary -->
             <template if:true={selectedProductsSummary.length}>
-                <div class="slds-m-top_medium">
-                    <h3 class="slds-text-heading_medium">Selected Products Summary</h3>
+                <div class="selected-products">
+                    <h3>Selected Products Summary</h3>
                     <lightning-datatable
                         key-field="id"
                         data={selectedProductsSummary}
@@ -69,7 +70,7 @@
 
             <!-- Additional Inputs -->
             <template if:true={selectedProductsMap.size}>
-                <div class="slds-m-top_medium">
+                <div>
                     <lightning-input
                         type="date"
                         label="Service Start Date"
