@@ -6,6 +6,7 @@ import createOpportunityProducts from '@salesforce/apex/OpportunityProductContro
 
 export default class OpportunityProductInput extends LightningElement {
     @api recordId;
+    @track isAdjustModalOpen = false; // Tracks if the modal is open
     @track opportunityName = '';
     @track customerName = '';
     @track contactName = 'N/A';
@@ -38,6 +39,7 @@ export default class OpportunityProductInput extends LightningElement {
         { label: 'Unit Price', fieldName: 'unitPrice', type: 'currency' }
     ];
 
+    // Lifecycle hook to fetch opportunity details
     connectedCallback() {
         if (this.recordId) {
             this.fetchOpportunityDetails();
@@ -46,6 +48,7 @@ export default class OpportunityProductInput extends LightningElement {
         }
     }
 
+    // Fetch opportunity details and load products or pricebooks
     fetchOpportunityDetails() {
         getOpportunityDetails({ opportunityId: this.recordId })
             .then((data) => {
@@ -67,6 +70,7 @@ export default class OpportunityProductInput extends LightningElement {
             });
     }
 
+    // Load available pricebooks
     loadPricebooks() {
         getPricebooks()
             .then((data) => {
@@ -80,11 +84,13 @@ export default class OpportunityProductInput extends LightningElement {
             });
     }
 
+    // Handle pricebook selection and reload products
     handlePricebookChange(event) {
         this.selectedPricebook = event.target.value;
         this.loadProducts();
     }
 
+    // Load products available for the opportunity
     loadProducts() {
         getAvailableProducts({ opportunityId: this.recordId })
             .then((data) => {
@@ -105,6 +111,7 @@ export default class OpportunityProductInput extends LightningElement {
             });
     }
 
+    // Apply search filter to product data
     applySearchFilter() {
         this.filteredData = this.productData.filter((product) =>
             product.productName.toLowerCase().includes(this.searchKey.toLowerCase())
@@ -114,6 +121,7 @@ export default class OpportunityProductInput extends LightningElement {
         this.updateCurrentPageProducts();
     }
 
+    // Update the current page of products
     updateCurrentPageProducts() {
         const start = (this.currentPage - 1) * this.pageSize;
         const end = start + this.pageSize;
@@ -125,6 +133,7 @@ export default class OpportunityProductInput extends LightningElement {
         });
     }
 
+    // Handle row selection in the datatable
     handleRowSelection(event) {
         const selectedRows = event.detail.selectedRows;
 
@@ -141,6 +150,7 @@ export default class OpportunityProductInput extends LightningElement {
         });
     }
 
+    // Handle input changes for various fields
     handleInputChange(event) {
         const field = event.target.dataset.field;
         this[field] = event.target.value;
@@ -150,6 +160,7 @@ export default class OpportunityProductInput extends LightningElement {
         }
     }
 
+    // Handle pagination: next page
     handleNextPage() {
         if (this.currentPage < this.totalPages) {
             this.currentPage++;
@@ -157,6 +168,7 @@ export default class OpportunityProductInput extends LightningElement {
         }
     }
 
+    // Handle pagination: previous page
     handlePreviousPage() {
         if (this.currentPage > 1) {
             this.currentPage--;
@@ -164,6 +176,7 @@ export default class OpportunityProductInput extends LightningElement {
         }
     }
 
+    // Create opportunity products
     createOpportunityProducts() {
         const opportunityProducts = Array.from(this.selectedProductsMap.values()).map((product) => ({
             OpportunityId: this.recordId,
@@ -188,20 +201,27 @@ export default class OpportunityProductInput extends LightningElement {
             });
     }
 
-    get selectedRowIds() {
-        return Array.from(this.selectedProductsMap.keys());
+    // Open the modal to adjust products
+    openAdjustModal() {
+        this.isAdjustModalOpen = true;
     }
 
-    get selectedProductsSummary() {
-        return Array.from(this.selectedProductsMap.values());
+    // Close the modal
+    closeAdjustModal() {
+        this.isAdjustModalOpen = false;
     }
 
-    // Pagination: Getters for disabled states
+    // Getters for pagination disabled states
     get isPreviousDisabled() {
         return this.currentPage <= 1;
     }
 
     get isNextDisabled() {
         return this.currentPage >= this.totalPages;
+    }
+
+    // Getter for selected products summary
+    get selectedProductsSummary() {
+        return Array.from(this.selectedProductsMap.values());
     }
 }

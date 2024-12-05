@@ -1,0 +1,84 @@
+<!--
+  @description       : 
+  @author            : jamesperram@gmail.com
+  @group             : 
+  @last modified on  : 12-04-2024
+  @last modified by  : jamesperram@gmail.com
+-->
+<template>
+    <template if:true={isLoading}>
+        <lightning-spinner alternative-text="Loading"></lightning-spinner>
+    </template>
+
+    <template if:true={products.length}>
+        <lightning-card title="Adjust Opportunity Products" icon-name="custom:custom63">
+            <template for:each={products} for:item="product">
+                <div key={product.Id} class="slds-box slds-m-bottom_small">
+                    <p><strong>Product Name:</strong> {product.Product2.Name}</p>
+                    <p><strong>Quantity:</strong> {product.Quantity}</p>
+                    <p><strong>Unit Price:</strong> {product.UnitPrice}</p>
+                    <lightning-button
+                        label="Edit"
+                        data-id={product.Id}
+                        variant="brand"
+                        class="slds-m-top_small"
+                        onclick={handleEditProduct}>
+                    </lightning-button>
+                </div>
+            </template>
+        </lightning-card>
+    </template>
+
+    <template if:false={products.length}>
+        <p class="slds-text-align_center slds-m-top_medium">
+            No Opportunity Products found.
+        </p>
+    </template>
+
+    <template if:true={selectedProduct}>
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <h2 class="slds-text-heading_medium">Edit Product</h2>
+                    <lightning-button-icon
+                        icon-name="utility:close"
+                        variant="bare"
+                        alternative-text="Close"
+                        onclick={handleCloseModal}>
+                    </lightning-button-icon>
+                </header>
+                <div class="slds-modal__content">
+                    <lightning-input
+                        label="Quantity"
+                        type="number"
+                        value={selectedProduct.Quantity}
+                        data-field="Quantity"
+                        required
+                        min="1"
+                        onchange={handleInputChange}>
+                    </lightning-input>
+                    <lightning-input
+                        label="Unit Price"
+                        type="number"
+                        value={selectedProduct.UnitPrice}
+                        data-field="UnitPrice"
+                        required
+                        min="0.01"
+                        step="0.01"
+                        onchange={handleInputChange}>
+                    </lightning-input>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button label="Cancel" onclick={handleCloseModal}></lightning-button>
+                    <lightning-button
+                        label="Save"
+                        variant="brand"
+                        onclick={handleSaveProduct}
+                        disabled={isLoading}>
+                    </lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

@@ -114,6 +114,21 @@
                     class="slds-m-top_medium">
                 </lightning-button>
             </template>
+
+            <!-- Adjust Existing Products -->
+            <lightning-button
+                label="Adjust Existing Products"
+                variant="brand-outline"
+                class="slds-m-top_medium"
+                onclick={openAdjustModal}>
+            </lightning-button>
+
+            <template if:true={isAdjustModalOpen}>
+                <c-adjust-opportunity-products
+                    record-id={recordId}
+                    onclose={closeAdjustModal}>
+                </c-adjust-opportunity-products>
+            </template>
         </div>
     </lightning-card>
 </template>

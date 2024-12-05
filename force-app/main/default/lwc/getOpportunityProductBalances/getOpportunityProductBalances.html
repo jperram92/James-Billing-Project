@@ -1,0 +1,46 @@
+<!--
+  @description       : 
+  @author            : jamesperram@gmail.com
+  @group             : 
+  @last modified on  : 12-04-2024
+  @last modified by  : jamesperram@gmail.com
+-->
+<template>
+    <lightning-card title="Opportunity Product Balances" icon-name="standard:opportunity">
+        <template if:true={data}>
+            <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">Product Name</th>
+                        <th scope="col">Unit Price</th>
+                        <th scope="col">Allocated Quantity</th>
+                        <th scope="col">Consumed Quantity</th>
+                        <th scope="col">Total Allocated</th>
+                        <th scope="col">Total Spent</th>
+                        <th scope="col">Balance</th>
+                        <th scope="col">% Spent</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template for:each={data} for:item="row">
+                        <tr key={row.productName}>
+                            <td>{row.productName}</td>
+                            <td>{row.unitPriceFormatted}</td>
+                            <td>{row.allocatedQty}</td>
+                            <td>{row.consumedQty}</td>
+                            <td>{row.totalAllocatedFormatted}</td>
+                            <td>{row.totalSpentFormatted}</td>
+                            <td>{row.balanceFormatted}</td>
+                            <td>
+                                <span class={row.percentageClass}>{row.percentageSpent}%</span>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </template>
+        <template if:true={error}>
+            <p class="slds-text-color_error">Error loading data: {error}</p>
+        </template>
+    </lightning-card>
+</template>

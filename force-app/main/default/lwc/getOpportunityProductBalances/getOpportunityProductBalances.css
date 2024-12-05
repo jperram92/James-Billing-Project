@@ -1,0 +1,12 @@
+.slds-table {
+    width: 100%;
+    font-size: 14px;
+}
+
+.slds-text-color_error {
+    color: #e74c3c; /* Red for high usage */
+}
+
+.slds-text-color_success {
+    color: #27ae60; /* Green for low usage */
+}
