@@ -2,7 +2,7 @@
  * @description       : 
  * @author            : jamesperram@gmail.com
  * @group             : 
- * @last modified on  : 12-04-2024
+ * @last modified on  : 12-10-2024
  * @last modified by  : jamesperram@gmail.com
 **/
 // Replace this with the Opportunity Id you want to target
@@ -18,7 +18,7 @@ try {
     
     // Check if there are any Opportunity Products to delete
     if (!oppLineItems.isEmpty()) {
-        // Delete all associated OpportunityLineItems
+        // Delete all associated OpportunityLineItems   
         delete oppLineItems;
         System.debug('Successfully deleted all Opportunity Products associated with the Opportunity.');
     } else {

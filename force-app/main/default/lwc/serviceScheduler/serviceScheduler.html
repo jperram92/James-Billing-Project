@@ -29,13 +29,34 @@
         <template if:true={selectedService}>
             <lightning-record-edit-form object-api-name="JBP_Service_Schedule__c" onsuccess={handleSuccess}>
                 <lightning-input-field 
-                    field-name="Opportunity_Product__c" 
-                    value={selectedService.JBP_Service__r.Service_Schedule__r.Opportunity_Product__c}>
+                    field-name="Name" 
+                    value={selectedService.Name}>
                 </lightning-input-field>
-                <lightning-input-field field-name="JBP_Service_Start_Time__c"></lightning-input-field>
-                <lightning-input-field field-name="JBP_Service_End_Time__c"></lightning-input-field>
-                <lightning-input-field field-name="JBP_Service_Type__c"></lightning-input-field>
-                <lightning-button class="slds-m-top_small" type="submit" label="Create"></lightning-button>
+                <lightning-input-field 
+                    field-name="JBP_Service__c" 
+                    value={selectedService.Id}>
+                </lightning-input-field>
+                <lightning-input-field 
+                    field-name="Opportunity_Product__c" 
+                    value={selectedService.Opportunity_Product__c}>
+                </lightning-input-field>
+                <lightning-input-field 
+                    field-name="JBP_Service_Date__c" 
+                    value={selectedService.JBP_Service_Date__c}>
+                </lightning-input-field>
+                <lightning-input-field 
+                    field-name="JBP_Service_Start_Time__c" 
+                    value={selectedService.JBP_Service_Start_Time__c}>
+                </lightning-input-field>
+                <lightning-input-field 
+                    field-name="JBP_Service_End_Time__c" 
+                    value={selectedService.JBP_Service_End_Time__c}>
+                </lightning-input-field>
+                <lightning-input-field 
+                    field-name="JBP_Service_Type__c" 
+                    value={selectedService.JBP_Service_Type__c}>
+                </lightning-input-field>
+                <lightning-button type="submit" label="Create"></lightning-button>
             </lightning-record-edit-form>
         </template>
     </lightning-card>
