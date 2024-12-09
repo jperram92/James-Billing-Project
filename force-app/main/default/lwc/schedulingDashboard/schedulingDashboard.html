@@ -1,0 +1,35 @@
+<!--
+  @description       : 
+  @author            : jamesperram@gmail.com
+  @group             : 
+  @last modified on  : 12-09-2024
+  @last modified by  : jamesperram@gmail.com
+-->
+<template>
+    <lightning-card title="Scheduling Dashboard">
+        <lightning-button label="Bulk Create Services" onclick={handleBulkCreate}></lightning-button>
+
+        <!-- Display debug messages -->
+        <template if:true={debugMessage}>
+            <div class="slds-notify slds-notify_toast slds-theme_info">
+                <h2>{debugMessage}</h2>
+            </div>
+        </template>
+
+        <!-- Modal for Bulk Create Services -->
+        <template if:true={isBulkModalOpen}>
+            <c-modal onclose={closeBulkModal}>
+                <h1 slot="header">Bulk Create Services</h1>
+                <div slot="content">
+                    <lightning-input
+                        type="number"
+                        value={bulkServiceCount}
+                        label="Number of Services"
+                        onchange={handleBulkServiceCountChange}>
+                    </lightning-input>
+                </div>
+                <lightning-button label="Save" slot="footer" onclick={saveBulkServices}></lightning-button>
+            </c-modal>
+        </template>
+    </lightning-card>
+</template>
