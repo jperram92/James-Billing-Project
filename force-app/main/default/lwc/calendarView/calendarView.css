@@ -1,0 +1,45 @@
+/* Styling for the calendar component */
+.controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    padding: 10px;
+    border: 1px solid #dcdcdc;
+    border-radius: 5px;
+}
+
+.day-header {
+    text-align: center;
+    font-weight: bold;
+    background-color: #f4f4f4;
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+}
+
+.day {
+    text-align: center;
+    padding: 15px;
+    border: 1px solid #eaeaea;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #fff;
+}
+
+.day:hover {
+    background-color: #f0f8ff;
+    border-color: #a0c4ff;
+}
+
+.day.today {
+    background-color: #cfe3ff;
+    font-weight: bold;
+    border: 2px solid #4a90e2;
+}

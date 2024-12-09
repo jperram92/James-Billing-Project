@@ -1,0 +1,47 @@
+<!--
+  @description       : 
+  @author            : jamesperram@gmail.com
+  @group             : 
+  @last modified on  : 12-09-2024
+  @last modified by  : jamesperram@gmail.com
+-->
+<template>
+    <lightning-card title="Dynamic Calendar">
+        <div class="controls">
+            <lightning-combobox
+                label="Month"
+                value={selectedMonth}
+                options={months}
+                onchange={handleMonthChange}>
+            </lightning-combobox>
+            <lightning-input
+                label="Year"
+                type="number"
+                value={selectedYear}
+                onchange={handleYearChange}>
+            </lightning-input>
+        </div>
+        <div class="calendar">
+            <template for:each={calendarDays} for:item="day">
+                <div 
+                    class="day {day.isToday ? 'today' : ''}" 
+                    key={day.key}
+                    onclick={handleDayClick}>
+                    {day.value}
+                </div>
+            </template>
+        </div>
+        <template if:true={services.length}>
+            <lightning-datatable
+                key-field="Id"
+                data={services}
+                columns={columns}
+                draft-values={draftValues}
+                onsave={handleSave}>
+            </lightning-datatable>
+        </template>
+        <template if:false={services.length}>
+            <p>No services available for the selected date.</p>
+        </template>
+    </lightning-card>
+</template>
