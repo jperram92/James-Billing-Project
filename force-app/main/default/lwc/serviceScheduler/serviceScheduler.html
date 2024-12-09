@@ -1,0 +1,42 @@
+<!--
+  @description       : 
+  @author            : jamesperram@gmail.com
+  @group             : 
+  @last modified on  : 12-10-2024
+  @last modified by  : jamesperram@gmail.com
+-->
+<template>
+    <lightning-card title="Service Scheduler" icon-name="action:new_event">
+        <!-- Step 1: Select Service Date -->
+        <lightning-input type="date" label="Select Service Date" onchange={handleDateChange}></lightning-input>
+
+        <!-- Display services if available -->
+        <template if:true={services}>
+            <lightning-datatable
+                key-field="id"
+                data={services}
+                columns={columns}
+                onrowaction={handleServiceSelect}>
+            </lightning-datatable>
+        </template>
+
+        <!-- Display error message -->
+        <template if:true={error}>
+            <p class="slds-text-color_error">{error}</p>
+        </template>
+
+        <!-- Step 2: Create Service Schedule -->
+        <template if:true={selectedService}>
+            <lightning-record-edit-form object-api-name="JBP_Service_Schedule__c" onsuccess={handleSuccess}>
+                <lightning-input-field 
+                    field-name="Opportunity_Product__c" 
+                    value={selectedService.JBP_Service__r.Service_Schedule__r.Opportunity_Product__c}>
+                </lightning-input-field>
+                <lightning-input-field field-name="JBP_Service_Start_Time__c"></lightning-input-field>
+                <lightning-input-field field-name="JBP_Service_End_Time__c"></lightning-input-field>
+                <lightning-input-field field-name="JBP_Service_Type__c"></lightning-input-field>
+                <lightning-button class="slds-m-top_small" type="submit" label="Create"></lightning-button>
+            </lightning-record-edit-form>
+        </template>
+    </lightning-card>
+</template>
